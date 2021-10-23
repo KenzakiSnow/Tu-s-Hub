@@ -193,7 +193,7 @@ section5:addToggle("Toggle", false, function(value)
 	nocliping = value
 end)
 local section4 = plrPage:addSection("Mana Fly")
-_G.fly = Enum.KeyCode.Minus
+_G.fly = Enum.KeyCode.Break
 section4:addKeybind("Toggle Keybind", Enum.KeyCode.Break, function(c) end, function(c) 
 	_G.fly = c.KeyCode
 end)
