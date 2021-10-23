@@ -194,7 +194,7 @@ section5:addToggle("Toggle", false, function(value)
 end)
 local section4 = plrPage:addSection("Mana Fly")
 _G.fly = Enum.KeyCode.Minus
-section4:addKeybind("Toggle Keybind", Enum.KeyCode.KeypadMinus, function(c) end, function(c) 
+section4:addKeybind("Toggle Keybind", Enum.KeyCode.Break, function(c) end, function(c) 
 	_G.fly = c.KeyCode
 end)
 section4:addSlider("Adjust", 2, 6, 20, function(value)
