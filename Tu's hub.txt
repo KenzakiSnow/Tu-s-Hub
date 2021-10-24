@@ -10,6 +10,7 @@ _G.nofall = false
 _G.brightness = 0.5
 _G.timeofday = 14
 _G.autotrinket = false
+_G.easygate = false
 local noclipwhenfly = false
 local CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
 local lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
@@ -33,6 +34,34 @@ local function notification(text)
 		Duration = 5,
 	})
 end
+local easygatetable = {
+	["d1"] = "desert 1",
+	["d2"] = "desert 2",
+	["d3"] = "desert 3",
+	["d4"] = "desert 4",
+	["d5"] = "desert 5",
+	["t1"] = "tundra 1",
+	["t2"] = "tundra 2",
+	["t3"] = "tundra 3",
+	["t4"] = "tundra 4",
+	["t5"] = "tundra 5",
+	["t6"] = "tundra 6",
+	["t7"] = "tundra 7",
+	["f1"] = "forest 1",
+	["f2"] = "forest 2",
+	["f3"] = "forest 3",
+	["f4"] = "forest 4",
+	["f5"] = "forest 5",
+	["df1"] = "deepforest 1",
+	["df2"] = "deepforest 2",
+	["df3"] = "deepforest 3",
+	["df4"] = "deepforest 4",
+	["df5"] = "deepforest 5",
+	["sn"] = "snail",
+	["sc"] = "skycastle",
+	["sg"] = "sigil",
+	["s"] = "skycastle"
+}
 pcall(function() -- Main Bypassto
 	for i,v in next,getconnections(game:GetService("ScriptContext").Error) do
 		v:Disable()
@@ -57,6 +86,9 @@ pcall(function() -- Main Bypassto
 	shared.__namecall = getrawmetatable(game).__namecall
 	shared.__index = getrawmetatable(game).__index
 	shared.__newindex = getrawmetatable(game).__newindex
+	local function removespaces(str)
+		return str:gsub(" ","")
+	end
 	local mt = getrawmetatable(game)
 	setreadonly(mt, false)
 	getrawmetatable(game).__namecall = function(self,...)
@@ -95,6 +127,22 @@ pcall(function() -- Main Bypassto
 			end
 		end
 		return shared.__namecall(self, ...)
+	end
+	if place == "FakeRL" then
+		local mt, part = getrawmetatable(game), nil
+		local old = mt.__namecall
+		mt.__namecall = function(self, ...)
+			local method = getnamecallmethod();
+			local args = ({...})
+			if method == "FireServer" and self.Name == "SayMessageRequest" and _G.easygate == true and place == "FakeRL" then
+				local str = tostring(args[1]):lower()
+				local strr = removespaces(str)
+				if easygatetable[strr] ~= nil then
+					args[1] = easygatetable[strr]
+				end
+			end
+			return old(self, unpack(args))
+		end
 	end
 	local n = 0
 	local realws = Players.LocalPlayer.Character.Humanoid.WalkSpeed
@@ -280,6 +328,10 @@ if place ~= nil then
 		local section23 = spgame:addSection("Auto pick up trinkets")
 		section23:addToggle("Toggle", false, function(value)
 			_G.autotrinket = value
+		end)
+		local section33 = spgame:addSection("Easy chat Gate")
+		section33:addToggle("Toggle", false, function(value)
+			_G.easygate = value
 		end)
 	end
 end
